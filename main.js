@@ -331,6 +331,7 @@ function checkAndClickExtendSession() {
                 if (latestVersion !== currentVersion) {
                     // Update the script
                     window.location.href = 'https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js';
+                    console.log("Updated Code!");
                 }
             });
     }
