@@ -13,7 +13,7 @@
 
 (function() {
     'use strict';
-console.log("newer code")
+console.log("newest code")
     // Default color values
     const DEFAULT_COLORS = {
         primaryColor: '#6E00FF',
