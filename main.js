@@ -7,6 +7,8 @@
 // @grant GM_addStyle
 // @grant GM_setValue
 // @grant GM_getValue
+// @updateURL https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
+// @downloadURL https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
 // ==/UserScript==
 
 (function() {
@@ -318,7 +320,20 @@ function checkAndClickExtendSession() {
         }
     }
 }
-
+// Function to check for updates
+    function checkForUpdates() {
+        // Make an HTTP request to the script file in your GitHub repository
+        fetch('https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js')
+            .then(response => response.text())
+            .then(latestCode => {
+                const currentVersion = GM_info.script.version;
+                const latestVersion = latestCode.match(/@version\s+(\d+\.\d+)/)[1];
+                if (latestVersion !== currentVersion) {
+                    // Update the script
+                    window.location.href = 'https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js';
+                }
+            });
+    }
     // Main function to initialize the script
     function main() {
         changeElementColors();
