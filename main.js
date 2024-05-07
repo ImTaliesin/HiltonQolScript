@@ -357,10 +357,18 @@ function checkAndClickExtendSession() {
         }
     }
 
+    // Function to extract the main script functionality from the code
+    function extractMainFunctionality(code) {
+        const startIndex = code.indexOf('// Default color values');
+        const endIndex = code.lastIndexOf('// Load the script code');
+        return code.slice(startIndex, endIndex).trim();
+    }
+
     // Function to run the main script functionality
     function runMainScript(code) {
+        const mainFunctionality = extractMainFunctionality(code);
         const script = document.createElement('script');
-        script.textContent = code;
+        script.textContent = mainFunctionality;
         (document.head || document.documentElement).appendChild(script);
         script.remove();
     }
