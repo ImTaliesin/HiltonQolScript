@@ -322,7 +322,7 @@ function checkAndClickExtendSession() {
         }
     }
 }
-// Function to check for updates and update the script if necessary
+ // Function to check for updates and update the script if necessary
     function checkForUpdates() {
         GM_xmlhttpRequest({
             method: 'GET',
@@ -343,7 +343,7 @@ function checkAndClickExtendSession() {
     function loadScriptCode() {
         const storedCode = GM_getValue('scriptCode', '');
         if (storedCode) {
-            eval(storedCode);
+            runMainScript(storedCode);
         } else {
             GM_xmlhttpRequest({
                 method: 'GET',
@@ -351,10 +351,18 @@ function checkAndClickExtendSession() {
                 onload: function(response) {
                     const downloadedCode = response.responseText;
                     GM_setValue('scriptCode', downloadedCode);
-                    eval(downloadedCode);
+                    runMainScript(downloadedCode);
                 }
             });
         }
+    }
+
+    // Function to run the main script functionality
+    function runMainScript(code) {
+        const script = document.createElement('script');
+        script.textContent = code;
+        (document.head || document.documentElement).appendChild(script);
+        script.remove();
     }
 
     // Register a menu command to manually check for updates
