@@ -1,21 +1,19 @@
 // ==UserScript==
 // @name Hilton Element Color Changer and Column Hider
 // @namespace http://tampermonkey.net/
-// @version 0.3
+// @version 0.5
 // @description Changes the color of table headers, buttons, and elements on enterprise.pep.hilton.com and allows users to select columns to hide
 // @match https://enterprise.pep.hilton.com/*
+// @updateURL https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
+// @downloadURL https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
 // @grant GM_addStyle
 // @grant GM_setValue
 // @grant GM_getValue
-// @grant GM_xmlhttpRequest
-// @grant GM_registerMenuCommand
-// @updateURL https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
-// @downloadURL https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
 // ==/UserScript==
 
 (function() {
     'use strict';
-console.log('new code')
+console.log("new code")
     // Default color values
     const DEFAULT_COLORS = {
         primaryColor: '#6E00FF',
@@ -322,60 +320,14 @@ function checkAndClickExtendSession() {
         }
     }
 }
- // Function to check for updates and update the script if necessary
-    function checkForUpdates() {
-        GM_xmlhttpRequest({
-            method: 'GET',
-            url: 'https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js',
-            onload: function(response) {
-                const latestCode = response.responseText;
-                if (latestCode !== GM_info.scriptSource) {
-                    if (confirm('A new version of the script is available. Do you want to update?')) {
-                        GM_setValue('scriptCode', latestCode);
-                        location.reload();
-                    }
-                }
-            }
-        });
+
+    // Main function to initialize the script
+    function main() {
+        changeElementColors();
+        waitForButton();
+        observePageChanges();
+        setInterval(checkAndClickExtendSession, 5000);
     }
 
-    // Function to load the script code from storage or download it from GitHub
-    function loadScriptCode() {
-        const storedCode = GM_getValue('scriptCode', '');
-        if (storedCode) {
-            runMainScript(storedCode);
-        } else {
-            GM_xmlhttpRequest({
-                method: 'GET',
-                url: 'https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js',
-                onload: function(response) {
-                    const downloadedCode = response.responseText;
-                    GM_setValue('scriptCode', downloadedCode);
-                    runMainScript(downloadedCode);
-                }
-            });
-        }
-    }
-
-    // Function to extract the main script functionality from the code
-    function extractMainFunctionality(code) {
-        const startIndex = code.indexOf('// Default color values');
-        const endIndex = code.lastIndexOf('// Load the script code');
-        return code.slice(startIndex, endIndex).trim();
-    }
-
-    // Function to run the main script functionality
-    function runMainScript(code) {
-        const mainFunctionality = extractMainFunctionality(code);
-        const script = document.createElement('script');
-        script.textContent = mainFunctionality;
-        (document.head || document.documentElement).appendChild(script);
-        script.remove();
-    }
-
-    // Register a menu command to manually check for updates
-    GM_registerMenuCommand('Check for updates', checkForUpdates);
-
-    // Load the script code
-    loadScriptCode();
+    main();
 })();
