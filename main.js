@@ -3,7 +3,7 @@
 // @namespace http://tampermonkey.net/
 // @version 1.1
 // @description Changes the color of table headers, buttons, and elements on enterprise.pep.hilton.com and allows users to select columns to hide
-// @match https://enterprise.pep.hilton.com/*
+// @match https://login.pep.hilton.com/*
 // @updateURL https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
 // @downloadURL https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
 // @grant GM_addStyle
