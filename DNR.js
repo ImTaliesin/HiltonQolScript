@@ -143,7 +143,7 @@
   "Fields": { "Sarah": true },
   "Figueroa Alfredo Jr": { "Jose": true },
   "Flores": { "Carolina": true },
-  "Franco": { "Jose": true, "Steven":true },
+  "Franco": { "Jose": true},
   "Frido": { "Timothy": true },
   "Fosdick": { "Melissa": true },
   "Galindo": { "Leticia": true },
