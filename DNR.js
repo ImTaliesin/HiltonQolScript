@@ -12,6 +12,7 @@
 (function() {
     'use strict';
       const doNotRentList = {
+          "Diplock": {"Mark": true },
   "Addington": { "Summer": true },
   "Adams": { "Jeremy": true },
   "Aeticiga": { "Thomas Rudy": true },
@@ -143,7 +144,7 @@
   "Fields": { "Sarah": true },
   "Figueroa Alfredo Jr": { "Jose": true },
   "Flores": { "Carolina": true },
-  "Franco": { "Jose": true},
+  "Franco": { "Jose": true, "Steven":true },
   "Frido": { "Timothy": true },
   "Fosdick": { "Melissa": true },
   "Galindo": { "Leticia": true },
