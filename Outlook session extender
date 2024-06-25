@@ -1,0 +1,29 @@
+// ==UserScript==
+// @name         Outlook session extender
+// @namespace    http://tampermonkey.net/
+// @version      2024-06-14
+// @description  Automatically clicks the "Stay signed in" button to prevent automatic sign-out
+// @author       Brennan
+// @match        https://outlook.office.com/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    function checkAndClickStaySignedIn() {
+        const xpath = '/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/div/div[2]/div[2]/div/span[2]/button';
+        const button = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+
+        if (button) {
+            console.log('Stay signed in button found. Clicking...');
+            button.click();
+        }
+    }
+
+    function main() {
+        setInterval(checkAndClickStaySignedIn, 5000);
+    }
+
+    main();
+})();
