@@ -11,8 +11,25 @@
 
 (function() {
     'use strict';
+
+// Replace GM_addStyle with a custom function
+    function addStyle(css) {
+        const style = document.createElement('style');
+        style.textContent = css;
+        document.head.append(style);
+    }
+
+    // Add styles
+    addStyle(`
+        .highlight-do-not-rent,
+        .highlight-do-not-rent td {
+            background-color: #ffcccc !important;
+            color: #FF0000 !important;
+        }
+    `);
+
       const doNotRentList = {
-          "Diplock": {"Mark": true },
+          "Clawson": { "Troy": true,
   "Addington": { "Summer": true },
   "Adams": { "Jeremy": true },
   "Aeticiga": { "Thomas Rudy": true },
@@ -479,17 +496,9 @@
   "Zendejas": { "Anthony": true },
   "Zhu": { "Amy": true },
   "Zimmerman": { "Sara": true }
-}
+}}
 
-// Styles
-    GM_addStyle(`
-    .highlight-do-not-rent,
-    .highlight-do-not-rent td {
-        background-color: #ffcccc !important;
-    }
-`);
-
-   let isScanning = false;
+     let isScanning = false;
     let scanInterval;
     let scannedRows = new Set();
     let hasRunOnCurrentPage = false;
@@ -501,11 +510,14 @@
     function highlightReservation(row) {
         const lastNameCell = row.querySelector('td:nth-child(6)');
         const firstNameCell = row.querySelector('td:nth-child(7)');
+
         if (lastNameCell && firstNameCell) {
             const lastName = capitalizeFirstLetter(lastNameCell.textContent.trim());
             const firstName = capitalizeFirstLetter(firstNameCell.textContent.trim());
+
             if (doNotRentList[lastName] && doNotRentList[lastName][firstName]) {
                 row.classList.add('highlight-do-not-rent');
+                console.log(`Highlighted: ${lastName}, ${firstName}`);
                 return true;
             }
         }
@@ -515,14 +527,17 @@
     function scanAndHighlightNames() {
         if (!isScanning) return;
 
-        const tbody = document.querySelector('tbody');
+        const tbody = document.querySelector('table tbody');
         if (!tbody) {
             console.warn('Table body not found');
             return;
         }
 
         let highlightedCount = 0;
+        let totalRows = 0;
+
         tbody.querySelectorAll('tr').forEach(row => {
+            totalRows++;
             if (!scannedRows.has(row)) {
                 scannedRows.add(row);
                 if (highlightReservation(row)) {
@@ -531,11 +546,8 @@
             }
         });
 
-        if (highlightedCount > 0) {
-            console.log(`Highlighted ${highlightedCount} new rows`);
-        }
+        console.log(`Scanned ${totalRows} rows, highlighted ${highlightedCount} new rows`);
 
-        // If all rows have been scanned, stop scanning
         if (scannedRows.size === tbody.querySelectorAll('tr').length) {
             stopScanning();
         }
@@ -562,7 +574,7 @@
 
     function init() {
         console.log('Initializing script');
-        startScanning();
+        setTimeout(startScanning, 2000); // 2-second delay
     }
 
     function checkUrlAndInitialize() {
@@ -580,21 +592,18 @@
     // Initial check
     checkUrlAndInitialize();
 
-    // Set up a MutationObserver to detect URL changes
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.type === "attributes" && mutation.attributeName === "href") {
+    // Set up a more robust way to detect URL changes
+    function observeUrlChanges() {
+        let lastUrl = location.href;
+        new MutationObserver(() => {
+            const url = location.href;
+            if (url !== lastUrl) {
+                lastUrl = url;
                 checkUrlAndInitialize();
             }
-        });
-    });
+        }).observe(document, {subtree: true, childList: true});
+    }
 
-    observer.observe(document.body, {
-        attributes: true,
-        childList: true,
-        subtree: true
-    });
-
-    // Also check periodically in case the observer misses something
-    setInterval(checkUrlAndInitialize, 1000);
+    // Call the function to start observing URL changes
+    observeUrlChanges();
 })();
