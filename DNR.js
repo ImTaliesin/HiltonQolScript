@@ -12,7 +12,7 @@
 (function() {
     'use strict';
       const doNotRentList = {
-          "Kraus": {"kylie": true },
+          "VAN DYKE": {"Tony": true },
   "Addington": { "Summer": true },
   "Adams": { "Jeremy": true },
   "Aeticiga": { "Thomas Rudy": true },
@@ -530,17 +530,18 @@ function highlightReservation(row) {
 
         for (let listLastName in doNotRentList) {
             if (listLastName.toLowerCase() === lastNameLower) {
-                if (doNotRentList[listLastName][firstNameLower]) {
-                    console.log(`Match found: ${lastName}, ${firstName}`);
-                    row.classList.add('highlight-do-not-rent');
-                    return true;
+                for (let listFirstName in doNotRentList[listLastName]) {
+                    if (listFirstName.toLowerCase() === firstNameLower) {
+                        console.log(`Match found: ${lastName}, ${firstName}`);
+                        row.classList.add('highlight-do-not-rent');
+                        return true;
+                    }
                 }
             }
         }
     }
     return false;
 }
-
 function scanAndHighlightNames() {
     if (!isScanning) return;
 
