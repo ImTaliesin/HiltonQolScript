@@ -2,34 +2,23 @@
 // @name DNR LIST
 // @namespace http://tampermonkey.net/
 // @version 2
-// @description DNR
+// @description Changes the color of table headers, buttons, and elements on enterprise.pep.hilton.com and allows users to select columns to hide
 // @match https://login.pep.hilton.com/*
+// @grant GM_addStyle
+// @grant GM_setValue
+// @grant GM_getValue
 // ==/UserScript==
 
 (function() {
     'use strict';
-    function addStyle(css) {
-        const style = document.createElement('style');
-        style.textContent = css;
-        document.head.append(style);
-    }
-
-    // Add styles
-    addStyle(`
-        .highlight-do-not-rent,
-        .highlight-do-not-rent td {
-            background-color: #ffcccc !important;
-            color: #FF0000 !important;
-        }
-    `);
-
       const doNotRentList = {
-
+          "Kraus": {"kylie": true },
   "Addington": { "Summer": true },
   "Adams": { "Jeremy": true },
   "Aeticiga": { "Thomas Rudy": true },
   "Aguayo": { "Joshua": true },
   "Aguirre": { "Nichole": true, "Aleja": true },
+  "Aiken": { "Ray Anthony": true },
   "Aiken II": { "Ray Anthony": true },
   "Alander": { "Deana": true, "Deania": true },
   "Alanis": { "Modesto": true },
@@ -493,27 +482,48 @@
   "Zimmerman": { "Sara": true }
 }
 
+    // Styles
+    GM_addStyle(`
+    .highlight-do-not-rent,
+    .highlight-do-not-rent td {
+        background-color: #ffcccc !important;
+        color: #ff0000 !important;
+    }
+    `);
+
     let isScanning = false;
     let scanInterval;
     let scannedRows = new Set();
-    let hasRunOnCurrentPage = false;
+    let hasInitialized = false;
 
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
     }
 
+    function findNameCells(row) {
+        const lastNameCell = row.querySelector('td:nth-child(6) div div');
+        const firstNameCell = row.querySelector('td:nth-child(7) div div');
+        return { lastNameCell, firstNameCell };
+    }
+
     function highlightReservation(row) {
-        const lastNameCell = row.querySelector('td:nth-child(6)');
-        const firstNameCell = row.querySelector('td:nth-child(7)');
-
+        const { lastNameCell, firstNameCell } = findNameCells(row);
         if (lastNameCell && firstNameCell) {
-            const lastName = capitalizeFirstLetter(lastNameCell.textContent.trim());
-            const firstName = capitalizeFirstLetter(firstNameCell.textContent.trim());
+            const lastName = lastNameCell.textContent.trim();
+            const firstName = firstNameCell.textContent.trim();
+            console.log(`Checking: ${lastName}, ${firstName}`);
 
-            if (doNotRentList[lastName] && doNotRentList[lastName][firstName]) {
-                row.classList.add('highlight-do-not-rent');
-                console.log(`Highlighted: ${lastName}, ${firstName}`);
-                return true;
+            const lastNameLower = lastName.toLowerCase();
+            const firstNameLower = firstName.toLowerCase();
+
+            for (let listLastName in doNotRentList) {
+                if (listLastName.toLowerCase() === lastNameLower) {
+                    if (doNotRentList[listLastName][firstNameLower]) {
+                        console.log(`Match found: ${lastName}, ${firstName}`);
+                        row.classList.add('highlight-do-not-rent');
+                        return true;
+                    }
+                }
             }
         }
         return false;
@@ -522,17 +532,14 @@
     function scanAndHighlightNames() {
         if (!isScanning) return;
 
-        const tbody = document.querySelector('table tbody');
+        const tbody = document.querySelector('tbody');
         if (!tbody) {
             console.warn('Table body not found');
             return;
         }
 
         let highlightedCount = 0;
-        let totalRows = 0;
-
         tbody.querySelectorAll('tr').forEach(row => {
-            totalRows++;
             if (!scannedRows.has(row)) {
                 scannedRows.add(row);
                 if (highlightReservation(row)) {
@@ -541,17 +548,14 @@
             }
         });
 
-        console.log(`Scanned ${totalRows} rows, highlighted ${highlightedCount} new rows`);
-
-        if (scannedRows.size === tbody.querySelectorAll('tr').length) {
-            stopScanning();
+        if (highlightedCount > 0) {
+            console.log(`Highlighted ${highlightedCount} new rows`);
         }
     }
 
     function startScanning() {
-        if (!isScanning && !hasRunOnCurrentPage) {
+        if (!isScanning) {
             isScanning = true;
-            hasRunOnCurrentPage = true;
             scannedRows.clear();
             scanAndHighlightNames();
             scanInterval = setInterval(scanAndHighlightNames, 1000);
@@ -567,38 +571,63 @@
         }
     }
 
+    function waitForTable(callback, maxAttempts = 30, interval = 500) {
+        let attempts = 0;
+
+        const checkTable = () => {
+            const tbody = document.querySelector('tbody');
+            if (tbody && tbody.querySelectorAll('tr').length > 0) {
+                callback();
+            } else if (attempts < maxAttempts) {
+                attempts++;
+                setTimeout(checkTable, interval);
+            } else {
+                console.warn('Table not found after maximum attempts');
+            }
+        };
+
+        checkTable();
+    }
+
     function init() {
+        if (hasInitialized) return;
         console.log('Initializing script');
-        setTimeout(startScanning, 2000); // 2-second delay
+        hasInitialized = true;
+        waitForTable(startScanning);
     }
 
     function checkUrlAndInitialize() {
         const isArrivalsPage = window.location.href.includes('/hk-frontdesk-web/index.html#/arrivals/arrivals-report-details');
 
-        if (isArrivalsPage && !hasRunOnCurrentPage) {
-            console.log('Arrivals report page detected. Initializing script...');
-            init();
-        } else if (!isArrivalsPage) {
+        if (isArrivalsPage) {
+            if (!hasInitialized) {
+                console.log('Arrivals report page detected. Initializing script...');
+                init();
+            }
+        } else {
             stopScanning();
-            hasRunOnCurrentPage = false;
+            hasInitialized = false;
         }
     }
 
     // Initial check
     checkUrlAndInitialize();
 
-    // Set up a more robust way to detect URL changes
-    function observeUrlChanges() {
-        let lastUrl = location.href;
-        new MutationObserver(() => {
-            const url = location.href;
-            if (url !== lastUrl) {
-                lastUrl = url;
+    // Set up a MutationObserver to detect URL changes
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === "attributes" && mutation.attributeName === "href") {
                 checkUrlAndInitialize();
             }
-        }).observe(document, {subtree: true, childList: true});
-    }
+        });
+    });
 
-    // Call the function to start observing URL changes
-    observeUrlChanges();
+    observer.observe(document.body, {
+        attributes: true,
+        childList: true,
+        subtree: true
+    });
+
+    // Also check periodically in case the observer misses something
+    setInterval(checkUrlAndInitialize, 2000);
 })();
