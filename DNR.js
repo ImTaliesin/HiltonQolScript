@@ -482,152 +482,164 @@
   "Zimmerman": { "Sara": true }
 }
 
-    // Styles
-    GM_addStyle(`
-    .highlight-do-not-rent,
-    .highlight-do-not-rent td {
-        background-color: #ffcccc !important;
-        color: #ff0000 !important;
+// Styles
+GM_addStyle(`
+.highlight-do-not-rent,
+.highlight-do-not-rent td {
+    background-color: #ffcccc !important;
+}
+`);
+
+let isScanning = false;
+let scanInterval;
+let scannedRows = new Set();
+let hasInitialized = false;
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
+function findNameCells(row) {
+    const cells = Array.from(row.querySelectorAll('td'));
+    let lastNameCell, firstNameCell;
+
+    // Find the index of "LAST NAME" and "FIRST NAME" columns
+    const headerRow = row.closest('table').querySelector('thead tr');
+    const headers = Array.from(headerRow.querySelectorAll('th'));
+
+    const lastNameIndex = headers.findIndex(th => th.textContent.trim().toUpperCase() === 'LAST NAME');
+    const firstNameIndex = headers.findIndex(th => th.textContent.trim().toUpperCase() === 'FIRST NAME');
+
+    if (lastNameIndex !== -1 && firstNameIndex !== -1) {
+        lastNameCell = cells[lastNameIndex];
+        firstNameCell = cells[firstNameIndex];
     }
-    `);
 
-    let isScanning = false;
-    let scanInterval;
-    let scannedRows = new Set();
-    let hasInitialized = false;
+    return { lastNameCell, firstNameCell };
+}
 
-    function capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-    }
+function highlightReservation(row) {
+    const { lastNameCell, firstNameCell } = findNameCells(row);
+    if (lastNameCell && firstNameCell) {
+        const lastName = lastNameCell.textContent.trim();
+        const firstName = firstNameCell.textContent.trim();
+        console.log(`Checking: ${lastName}, ${firstName}`);
 
-    function findNameCells(row) {
-        const lastNameCell = row.querySelector('td:nth-child(6) div div');
-        const firstNameCell = row.querySelector('td:nth-child(7) div div');
-        return { lastNameCell, firstNameCell };
-    }
+        const lastNameLower = lastName.toLowerCase();
+        const firstNameLower = firstName.toLowerCase();
 
-    function highlightReservation(row) {
-        const { lastNameCell, firstNameCell } = findNameCells(row);
-        if (lastNameCell && firstNameCell) {
-            const lastName = lastNameCell.textContent.trim();
-            const firstName = firstNameCell.textContent.trim();
-            console.log(`Checking: ${lastName}, ${firstName}`);
-
-            const lastNameLower = lastName.toLowerCase();
-            const firstNameLower = firstName.toLowerCase();
-
-            for (let listLastName in doNotRentList) {
-                if (listLastName.toLowerCase() === lastNameLower) {
-                    if (doNotRentList[listLastName][firstNameLower]) {
-                        console.log(`Match found: ${lastName}, ${firstName}`);
-                        row.classList.add('highlight-do-not-rent');
-                        return true;
-                    }
+        for (let listLastName in doNotRentList) {
+            if (listLastName.toLowerCase() === lastNameLower) {
+                if (doNotRentList[listLastName][firstNameLower]) {
+                    console.log(`Match found: ${lastName}, ${firstName}`);
+                    row.classList.add('highlight-do-not-rent');
+                    return true;
                 }
             }
         }
-        return false;
+    }
+    return false;
+}
+
+function scanAndHighlightNames() {
+    if (!isScanning) return;
+
+    const table = document.querySelector('table');
+    if (!table) {
+        console.warn('No table found');
+        return;
     }
 
-    function scanAndHighlightNames() {
-        if (!isScanning) return;
-
-        const tbody = document.querySelector('tbody');
-        if (!tbody) {
-            console.warn('Table body not found');
-            return;
-        }
-
-        let highlightedCount = 0;
-        tbody.querySelectorAll('tr').forEach(row => {
-            if (!scannedRows.has(row)) {
-                scannedRows.add(row);
-                if (highlightReservation(row)) {
-                    highlightedCount++;
-                }
+    let highlightedCount = 0;
+    table.querySelectorAll('tbody tr').forEach(row => {
+        if (!scannedRows.has(row)) {
+            scannedRows.add(row);
+            if (highlightReservation(row)) {
+                highlightedCount++;
             }
-        });
-
-        if (highlightedCount > 0) {
-            console.log(`Highlighted ${highlightedCount} new rows`);
         }
+    });
+
+    if (highlightedCount > 0) {
+        console.log(`Highlighted ${highlightedCount} new rows`);
     }
+}
 
-    function startScanning() {
-        if (!isScanning) {
-            isScanning = true;
-            scannedRows.clear();
-            scanAndHighlightNames();
-            scanInterval = setInterval(scanAndHighlightNames, 1000);
-            console.log('Scanning started');
-        }
+function startScanning() {
+    if (!isScanning) {
+        isScanning = true;
+        scannedRows.clear();
+        scanAndHighlightNames();
+        scanInterval = setInterval(scanAndHighlightNames, 1000);
+        console.log('Scanning started');
     }
+}
 
-    function stopScanning() {
-        if (isScanning) {
-            isScanning = false;
-            clearInterval(scanInterval);
-            console.log('Scanning stopped');
-        }
+function stopScanning() {
+    if (isScanning) {
+        isScanning = false;
+        clearInterval(scanInterval);
+        console.log('Scanning stopped');
     }
+}
 
-    function waitForTable(callback, maxAttempts = 30, interval = 500) {
-        let attempts = 0;
+function waitForTable(callback, maxAttempts = 30, interval = 500) {
+    let attempts = 0;
 
-        const checkTable = () => {
-            const tbody = document.querySelector('tbody');
-            if (tbody && tbody.querySelectorAll('tr').length > 0) {
-                callback();
-            } else if (attempts < maxAttempts) {
-                attempts++;
-                setTimeout(checkTable, interval);
-            } else {
-                console.warn('Table not found after maximum attempts');
-            }
-        };
-
-        checkTable();
-    }
-
-    function init() {
-        if (hasInitialized) return;
-        console.log('Initializing script');
-        hasInitialized = true;
-        waitForTable(startScanning);
-    }
-
-    function checkUrlAndInitialize() {
-        const isArrivalsPage = window.location.href.includes('/hk-frontdesk-web/index.html#/arrivals/arrivals-report-details');
-
-        if (isArrivalsPage) {
-            if (!hasInitialized) {
-                console.log('Arrivals report page detected. Initializing script...');
-                init();
-            }
+    const checkTable = () => {
+        const table = document.querySelector('table');
+        if (table && table.querySelector('tbody tr')) {
+            callback();
+        } else if (attempts < maxAttempts) {
+            attempts++;
+            setTimeout(checkTable, interval);
         } else {
-            stopScanning();
-            hasInitialized = false;
+            console.warn('Table not found after maximum attempts');
         }
+    };
+
+    checkTable();
+}
+
+function init() {
+    if (hasInitialized) return;
+    console.log('Initializing script');
+    hasInitialized = true;
+    waitForTable(startScanning);
+}
+
+function checkUrlAndInitialize() {
+    const isArrivalsPage = window.location.href.includes('/hk-frontdesk-web/index.html#/arrivals/arrivals-report-details');
+
+    if (isArrivalsPage) {
+        if (!hasInitialized) {
+            console.log('Arrivals report page detected. Initializing script...');
+            init();
+        }
+    } else {
+        stopScanning();
+        hasInitialized = false;
     }
+}
 
-    // Initial check
-    checkUrlAndInitialize();
+// Initial check
+checkUrlAndInitialize();
 
-    // Set up a MutationObserver to detect URL changes
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.type === "attributes" && mutation.attributeName === "href") {
-                checkUrlAndInitialize();
-            }
-        });
+// Set up a MutationObserver to detect URL changes
+const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.type === "attributes" && mutation.attributeName === "href") {
+            checkUrlAndInitialize();
+        }
     });
+});
 
-    observer.observe(document.body, {
-        attributes: true,
-        childList: true,
-        subtree: true
-    });
+observer.observe(document.body, {
+    attributes: true,
+    childList: true,
+    subtree: true
+});
 
-    // Also check periodically in case the observer misses something
-    setInterval(checkUrlAndInitialize, 2000);
+// Also check periodically in case the observer misses something
+setInterval(checkUrlAndInitialize, 2000);
 })();
