@@ -12,7 +12,7 @@
 (function() {
     'use strict';
       const doNotRentList = {
-          "VAN DYKE": {"Tony": true },
+        
   "Addington": { "Summer": true },
   "Adams": { "Jeremy": true },
   "Aeticiga": { "Thomas Rudy": true },
