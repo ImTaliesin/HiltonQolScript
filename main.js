@@ -13,7 +13,7 @@
 
 (function() {
     'use strict';
-console.log("Brennan's script last updated: 6/8/24")
+
     // Default color values
     const DEFAULT_COLORS = {
         primaryColor: '#6E00FF',
@@ -98,8 +98,8 @@ console.log("Brennan's script last updated: 6/8/24")
             }
 
             .content-wrapper .wrapper .sidebar[data-v-fa7b918a] {
-                min-width: 120px !important;
-                max-width: 160px !important;
+                min-width: 180px !important;
+                max-width: 180px !important;
             }
         `);
     }
