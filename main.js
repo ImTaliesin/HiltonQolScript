@@ -1,19 +1,19 @@
 // ==UserScript==
-// @name Hilton Element Color Changer and Column Hider
-// @namespace http://tampermonkey.net/
-// @version 2
-// @description Changes the color of table headers, buttons, and elements on enterprise.pep.hilton.com and allows users to select columns to hide
-// @match https://login.pep.hilton.com/*
-// @updateURL https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
-// @downloadURL https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
-// @grant GM_addStyle
-// @grant GM_setValue
-// @grant GM_getValue
+// @name         Hilton Element Color Changer and Column Hider
+// @namespace    http://tampermonkey.net/
+// @version      2.0.1
+// @description  Changes the color of table headers, buttons, and elements on enterprise.pep.hilton.com and allows users to select columns to hide
+// @match        https://login.pep.hilton.com/*
+// @updateURL    https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
+// @downloadURL  https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
+// @grant        GM_addStyle
+// @grant        GM_setValue
+// @grant        GM_getValue
 // ==/UserScript==
 
 (function() {
     'use strict';
-
+    console.log("Brennan's script last updated: 7/11/24")
     // Default color values
     const DEFAULT_COLORS = {
         primaryColor: '#6E00FF',
@@ -56,6 +56,8 @@
             .left-tabs .menu[data-v-7175d18d],
             .left-tabs .sub-menu[data-v-7175d18d],
             thead,
+            .cth,
+            cth,
             .thead,
             .user,
             .user-details,
@@ -85,7 +87,7 @@
             .sidebar,
             .el-menu-vertical-demo,
             body::before,
-.hk-tab[data-v-50ccac6a] {
+            .hk-tab[data-v-50ccac6a] {
                 background-color: ${colors.bgColor} !important;
                 color: ${colors.bodyText} !important;
             }
@@ -97,9 +99,13 @@
                 color: black !important;
             }
 
-            .content-wrapper .wrapper .sidebar[data-v-fa7b918a] {
-                min-width: 180px !important;
-                max-width: 180px !important;
+            /* Updated sidebar selector */
+            .sidebar,
+            div[data-v-00bd171e][data-v-ac254710].sidebar,
+            .el-menu-vertical-demo {
+                min-width: 200px !important;
+                max-width: 200px !important;
+                width: 200px !important;
             }
         `);
     }
@@ -308,18 +314,18 @@
         observer.observe(document.body, config);
     }
 
-function checkAndClickExtendSession() {
-    const popupElement = document.querySelector('.popup[data-v-33aa6c60]');
-    const popupTextElement = popupElement?.querySelector('.text');
+    function checkAndClickExtendSession() {
+        const popupElement = document.querySelector('.popup[data-v-33aa6c60]');
+        const popupTextElement = popupElement?.querySelector('.text');
 
-    if (popupTextElement && popupTextElement.textContent.includes('Your session will end in')) {
-        const extendSessionButton = popupElement.querySelector('button.el-button--primary');
-        if (extendSessionButton) {
-            extendSessionButton.click();
-            console.log('Extended Session Clicked')
+        if (popupTextElement && popupTextElement.textContent.includes('Your session will end in')) {
+            const extendSessionButton = popupElement.querySelector('button.el-button--primary');
+            if (extendSessionButton) {
+                extendSessionButton.click();
+                console.log('Extended Session Clicked')
+            }
         }
     }
-}
 
     // Main function to initialize the script
     function main() {
