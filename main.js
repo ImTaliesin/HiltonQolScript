@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hilton Element Color Changer and Column Hider
 // @namespace    http://tampermonkey.net/
-// @version      2.0.2
+// @version      2.0.3
 // @description  Changes the color of table headers, buttons, and elements on enterprise.pep.hilton.com and allows users to select columns to hide
 // @match        https://login.pep.hilton.com/*
 // @updateURL    https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
@@ -65,7 +65,7 @@
             .left-tabs,
             .el-radio-button__inner,
             .hk-tab[data-v-56570132],
-            .reservations-report-table .cth[data-v-1bc9ee52], .hk-tab[data-v-50ccac6a]  {
+            .reservations-report-table .cth[data-v-1bc9ee52], .hk-tab[data-v-50ccac6a] {
                 background-color: ${colors.primaryColor} !important;
             }
 
@@ -87,7 +87,8 @@
             .sidebar,
             .el-menu-vertical-demo,
             body::before,
-            .hk-tab[data-v-50ccac6a] {
+            .hk-tab[data-v-50ccac6a],
+            hk-tab-header-v1{
                 background-color: ${colors.bgColor} !important;
                 color: ${colors.bodyText} !important;
             }
@@ -315,15 +316,10 @@
     }
 
     function checkAndClickExtendSession() {
-        const popupElement = document.querySelector('.popup[data-v-33aa6c60]');
-        const popupTextElement = popupElement?.querySelector('.text');
-
-        if (popupTextElement && popupTextElement.textContent.includes('Your session will end in')) {
-            const extendSessionButton = popupElement.querySelector('button.el-button--primary');
-            if (extendSessionButton) {
-                extendSessionButton.click();
-                console.log('Extended Session Clicked')
-            }
+        const extendSessionButton = document.querySelector('#app > div.popup-wrapper.small-popup > div > div.popup-content.normal-font > div > div.buttons > button.el-button.el-button--primary');
+        if (extendSessionButton) {
+            extendSessionButton.click();
+            console.log('Extended Session Clicked');
         }
     }
 
