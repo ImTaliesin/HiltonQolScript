@@ -81,17 +81,21 @@
                 background-color: ${colors.buttonTextColor} !important;
             }
 
-            .ctd,
-            #nav > div > div.wrapper > div.content > div > div > div.tabs-wrapper > div > div.tab-details > div > div.details-left-part > div.flex-1.p-10px.flexed-column > div.flexed-column.m-t-10,
-            body,
-            .sidebar,
-            .el-menu-vertical-demo,
-            body::before,
-            .hk-tab[data-v-50ccac6a],
-            hk-tab-header-v1{
-                background-color: ${colors.bgColor} !important;
-                color: ${colors.bodyText} !important;
-            }
+.ctd,
+#nav > div > div.wrapper > div.content > div > div > div.tabs-wrapper > div > div.tab-details > div > div.details-left-part > div.flex-1.p-10px.flexed-column > div.flexed-column.m-t-10,
+body,
+.sidebar,
+.el-menu-vertical-demo,
+body::before,
+.hk-tab[data-v-50ccac6a],
+.hk-tab-header-v1,
+#nav > div > div.wrapper > div.content > div > div.check-in-container.hk-tab-card > div.hk-tabs > div,
+div[data-v-974bfea2].hk-tab-header-v1,
+div[data-v-974bfea2].hk-tab-v1,
+div[data-v-974bfea2].hk-tab-v1.active-v1 {
+    background-color: ${colors.bgColor} !important;
+    color: ${colors.bodyText} !important;
+}
 
             .rooms,
             .room-box,
