@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name DNR LIST
 // @namespace http://tampermonkey.net/
-// @version 2
+// @version 2.1
 // @description Changes the color of table headers, buttons, and elements on enterprise.pep.hilton.com and allows users to select columns to hide
 // @match https://login.pep.hilton.com/*
 // @grant GM_addStyle
@@ -12,7 +12,7 @@
 (function() {
     'use strict';
       const doNotRentList = {
-        
+  "Aaron": { "Tawnyi": true},
   "Addington": { "Summer": true },
   "Adams": { "Jeremy": true },
   "Aeticiga": { "Thomas Rudy": true },
