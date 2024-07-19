@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name DNR LIST
 // @namespace http://tampermonkey.net/
-// @version 2.1
+// @version 1.1
 // @description DNR
 // @match https://login.pep.hilton.com/*
+// @updateURL    https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/DNR.js
+// @downloadURL  https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/DNR.js
 // @grant GM_addStyle
 // @grant GM_setValue
 // @grant GM_getValue
