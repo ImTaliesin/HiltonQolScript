@@ -1,10 +1,12 @@
 // ==UserScript==
 // @name         Outlook session extender
 // @namespace    http://tampermonkey.net/
-// @version      2024-06-14
+// @version      1.1
 // @description  Automatically clicks the "Stay signed in" button to prevent automatic sign-out
 // @author       Brennan
 // @match        https://outlook.office.com/*
+// @updateURL    https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/Outlook%20session%20extender
+// @downloadURL  https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/Outlook%20session%20extender
 // @grant        none
 // ==/UserScript==
 
