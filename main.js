@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hilton Element Color Changer and Column Hider
 // @namespace    http://tampermonkey.net/
-// @version      2.4
+// @version      2.5
 // @description  Changes the color of table headers, buttons, and elements on enterprise.pep.hilton.com and allows users to select columns to hide
 // @match        https://login.pep.hilton.com/*
 // @updateURL    https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
@@ -45,75 +45,76 @@
     // Change element colors based on the selected colors
     function changeElementColors() {
         GM_addStyle(`
-            .reservations-report-table,
-            .cth[data-v-4273bdc8],
-            button,
-            .tabs>div,
-            .el-button,
-            .el-menu-item,
-            .el-menu-item:focus,
-            .el-menu-item:hover,
-            .left-tabs .menu[data-v-7175d18d],
-            .left-tabs .sub-menu[data-v-7175d18d],
-            thead,
-            .cth,
-            cth,
-            .thead,
-            .user,
-            .user-details,
-            .tab-item,
-            .left-tabs,
-            .el-radio-button__inner,
-            .hk-tab[data-v-56570132],
-            .reservations-report-table .cth[data-v-1bc9ee52], .hk-tab[data-v-50ccac6a] {
-                background-color: ${colors.primaryColor} !important;
-            }
-
-            button,
-            .rate-badge,
-            .tabs>div,
-            .el-button,
-            .hk-text-black {
-                color: ${colors.buttonTextColor} !important;
-            }
-
-            .hk-tab.active[data-v-56570132] {
-                background-color: ${colors.buttonTextColor} !important;
-            }
-
-.ctd,
-#nav > div > div.wrapper > div.content > div > div > div.tabs-wrapper > div > div.tab-details > div > div.details-left-part > div.flex-1.p-10px.flexed-column > div.flexed-column.m-t-10,
-body,
-.sidebar,
-.el-menu-vertical-demo,
-body::before,
-.hk-tab[data-v-50ccac6a],
-.hk-tab-header-v1,
-#nav > div > div.wrapper > div.content > div > div.check-in-container.hk-tab-card > div.hk-tabs > div,
-div[data-v-974bfea2].hk-tab-header-v1,
-div[data-v-974bfea2].hk-tab-v1,
-div[data-v-974bfea2].hk-tab-v1.active-v1,
-div[data-v-c02510d4].el-date-editor.el-input,
-div[data-v-c02510d4].el-date-editor.el-input .el-input__inner{
-    background-color: ${colors.bgColor} !important;
-    color: ${colors.bodyText} !important;
-}
-
-            .rooms,
-            .room-box,
-            .cth,
-            #nav > div > div.wrapper > div > div > div > div.popup-wrapper.small-popup > div > div.popup-header > div > div > div > svg {
-                color: black !important;
-            }
-
-            /* Updated sidebar selector */
-            .sidebar,
-            div[data-v-00bd171e][data-v-ac254710].sidebar,
-            .el-menu-vertical-demo {
-                min-width: 200px !important;
-                max-width: 200px !important;
-                width: 200px !important;
-            }
+        .reservations-report-table,
+        .cth[data-v-4273bdc8],
+        button,
+        .tabs>div,
+        .el-button,
+        .el-menu-item,
+        .el-menu-item:focus,
+        .el-menu-item:hover,
+        .left-tabs .menu[data-v-7175d18d],
+        .left-tabs .sub-menu[data-v-7175d18d],
+        thead,
+        .cth,
+        cth,
+        .thead,
+        .user,
+        .user-details,
+        .tab-item,
+        .left-tabs,
+        .el-radio-button__inner,
+        .hk-tab[data-v-56570132],
+        .reservations-report-table .cth[data-v-1bc9ee52], .hk-tab[data-v-50ccac6a] {
+            background-color: ${colors.primaryColor} !important;
+        }
+        button,
+        .rate-badge,
+        .tabs>div,
+        .el-button,
+        .hk-text-black {
+            color: ${colors.buttonTextColor} !important;
+        }
+        .hk-tab.active[data-v-56570132] {
+            background-color: ${colors.buttonTextColor} !important;
+        }
+        .ctd,
+        #nav > div > div.wrapper > div.content > div > div > div.tabs-wrapper > div > div.tab-details > div > div.details-left-part > div.flex-1.p-10px.flexed-column > div.flexed-column.m-t-10,
+        body,
+        .sidebar,
+        .el-menu-vertical-demo,
+        body::before,
+        .hk-tab[data-v-50ccac6a],
+        .hk-tab-header-v1,
+        #nav > div > div.wrapper > div.content > div > div.check-in-container.hk-tab-card > div.hk-tabs > div,
+        div[data-v-974bfea2].hk-tab-header-v1,
+        div[data-v-974bfea2].hk-tab-v1,
+        div[data-v-974bfea2].hk-tab-v1.active-v1,
+        div[data-v-c02510d4].el-date-editor.el-input,
+        div[data-v-c02510d4].el-date-editor.el-input .el-input__inner {
+            background-color: ${colors.bgColor} !important;
+            color: ${colors.bodyText} !important;
+        }
+        .rooms,
+        .room-box,
+        .cth,
+        #nav > div > div.wrapper > div > div > div > div.popup-wrapper.small-popup > div > div.popup-header > div > div > div > svg {
+            color: black !important;
+        }
+        /* Updated sidebar selector */
+        .sidebar,
+        div[data-v-00bd171e][data-v-ac254710].sidebar,
+        .el-menu-vertical-demo {
+            min-width: 200px !important;
+            max-width: 200px !important;
+            width: 200px !important;
+        }
+        .left-tabs {
+            max-width: 300px !important;
+        }
+        #nav > div > div.wrapper > div.content > div > div > div.tabs-wrapper > div > div.tab-details > div > div.details-left-part > div.flex-1.p-10px.flexed-column {
+            font-size: 17px !important;
+        }
         `);
     }
 
