@@ -14,6 +14,10 @@
 (function() {
     'use strict';
      const doNotRentList = {
+
+ "Aaron": {
+"Tawni": true
+},
   "Addington": {
     "Summer": true
   },
@@ -175,6 +179,9 @@
   "Harlan": {
     "Floyd": true
   },
+"Hatamaria": {
+"Ali": true
+},
   "Heffner": {
     "Christopher": true
   },
@@ -256,6 +263,9 @@
   "Luna": {
     "Andrew": true
   },
+"Masoodi": {
+"Maral": true
+},
   "Marquez": {
     "Robert": true,
     "Christina": true
@@ -605,7 +615,8 @@
     "Maria": true
   },
   "Carr": {
-    "Suzzanne": true
+    "Suzzanne": true,
+    "Tabitha": true
   },
   "Casarez": {
     "Vanessa": true
@@ -662,6 +673,9 @@
   "Cuevas": {
     "Alexis": true
   },
+{"Cullinan":{
+"Drew": true
+},
   "Cutler": {
     "Mervain": true
   },
@@ -817,6 +831,9 @@
   "Holguin": {
     "Marissa": true
   },
+"Hovsepian": {
+    "Michael": true
+},
   "Hysell": {
     "Marjorie": true
   },
