@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name DNR LIST
 // @namespace http://tampermonkey.net/
-// @version 3.1
+// @version 3.2
 // @description DNR
 // @match https://login.pep.hilton.com/*
 // @updateURL    https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/DNR.js
@@ -188,7 +188,8 @@
   "Hernandez": {
     "Robert": true,
     "Alejandro": true,
-    "Dora": true
+    "Dora": true,
+    "Jaime": true
   },
   "Holcomb": {
     "Larry": true
