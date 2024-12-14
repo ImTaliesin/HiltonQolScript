@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hilton Element Color Changer and Column Hider
 // @namespace    http://tampermonkey.net/
-// @version      2.6
+// @version      2.8
 // @description  Changes the color of table headers, buttons, and elements on enterprise.pep.hilton.com and allows users to select columns to hide
 // @match        https://login.pep.hilton.com/*
 // @updateURL    https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
@@ -26,9 +26,10 @@
     const ALL_COLUMNS = [
         'HONORS TIER', 'BENEFITS', 'DIGITAL CHECK OUT', 'DCI', 'DK', 'MESSAGE',
         'LAST NAME', 'FIRST NAME', 'STATUS', 'ROOM', 'ROOM TYPE', 'OCC STATUS',
-        'HSK STATUS', 'ARRIVAL DATE', 'DEPARTURE DATE', 'NIGHTS', 'RATE PLAN',
-        'GROUP', 'CITY', 'COMPANY NAME', 'CONF NUMBER', 'ADDN GUESTS', 'EST. ARR TIME',
-        'EST. DEPT TIME', 'LATE CHECK OUT', 'BALANCE'
+        'HSK STATUS', 'ARRIVAL DATE', 'DEPARTURE DATE',
+        'NIGHTS', 'RATE PLAN','GROUP', 'CITY', 'COMPANY NAME', 'CONF NUMBER', 'EST. ARR TIME',
+        'EST. DEPT TIME', 'LATE CHECK OUT', 'BALANCE', 'ADD ON', 'MARKET SEGMENT','LOCAL MARKET SEGMENT','ADDN GUESTS', 'EARLY CHECK IN',
+        'DEPOSIT STATUS','LOCAL FIRST NAME', 'LOCAL LAST NAME'
     ];
 
     // Get color values from storage or use defaults
