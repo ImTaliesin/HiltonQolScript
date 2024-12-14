@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hilton Element Color Changer and Column Hider
 // @namespace    http://tampermonkey.net/
-// @version      2.5
+// @version      2.6
 // @description  Changes the color of table headers, buttons, and elements on enterprise.pep.hilton.com and allows users to select columns to hide
 // @match        https://login.pep.hilton.com/*
 // @updateURL    https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
@@ -82,6 +82,8 @@
         #nav > div > div.wrapper > div.content > div > div > div.tabs-wrapper > div > div.tab-details > div > div.details-left-part > div.flex-1.p-10px.flexed-column > div.flexed-column.m-t-10,
         body,
         .sidebar,
+        .content,
+        .header,
         .el-menu-vertical-demo,
         body::before,
         .hk-tab[data-v-50ccac6a],
