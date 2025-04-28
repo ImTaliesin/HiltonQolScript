@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name DNR LIST
 // @namespace http://tampermonkey.net/
-// @version 3.2
+// @version 3.3
 // @description DNR
 // @match https://login.pep.hilton.com/*
 // @updateURL    https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/DNR.js
@@ -323,6 +323,9 @@
   "Murphy": {
     "Dejanique": true
   },
+"Murrietta": {
+    "Assyria": true
+  },
   "Noroya": {
     "Hugo": true
   },
@@ -577,6 +580,9 @@
     "Thomas": true,
     "Saturnino": true
   },
+"Bonds": {
+    "Kelsey": true
+  },
   "Brooks": {
     "Donshay": true
   },
@@ -674,7 +680,7 @@
   "Cuevas": {
     "Alexis": true
   },
-{"Cullinan":{
+"Cullinan":{
 "Drew": true
 },
   "Cutler": {
