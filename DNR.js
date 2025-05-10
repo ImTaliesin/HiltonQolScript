@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name DNR LIST
 // @namespace http://tampermonkey.net/
-// @version 3.3
+// @version 3.4
 // @description DNR
 // @match https://login.pep.hilton.com/*
 // @updateURL    https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/DNR.js
@@ -13,11 +13,70 @@
 
 (function() {
     'use strict';
-     const doNotRentList = {
 
- "Aaron": {
-"Tawni": true
-},
+    const companyList = {
+        "ALE": "green", // Special case company that highlights in green
+        "Adventist": true, //true highlights in yellow
+        "Aventist Heath": true,
+        "Ale Solutions": true,
+        "Amiri Flight": true,
+        "Amiri Flight Qatar": true,
+        "ARKTOS": true,
+        "Berksire Hathaway": true,
+        "CCFMG": true,
+        "CCFMG Inspire Health Medical": true,
+        "CHG": true,
+        "CHG Healthcare": true,
+        "CRMC": true,
+        "Community Regional Medical Center": true,
+        "CRS": true,
+        "CRS Temporary Housing": true,
+        "Delta Bluegrass": true,
+        "Delta Bluegrass Co": true,
+        "Fedrooms": true,
+        "Foundation Laboratory": true,
+        "Genpact": true,
+        "Helena Agri": true,
+        "Helena Agri Enterprises": true,
+        "Helena Agri [Enterprises]": true,
+        "Engine": true,
+        "Hotel Engine": true,
+        "KinderCare": true,
+        "KinderCare Education": true,
+        "Lyons Magnus": true,
+        "Michels Power": true,
+        "Pacific Energy": true,
+        "MVAC": true,
+        "MVAC (Menifee Valley A/C)": true,
+        "PG&E": true,
+        "Pacific Gas and Electric": true,
+        "Pacific Pro Tax": true,
+        "Parwest": true,
+        "Pridewaterhousecoopers": true,
+        "PWC": true,
+        "Rail Pros": true,
+        "Ridgerunner Engineering": true,
+        "RMS Life Safety": true,
+        "Ronald McDonald House Charities": true,
+        "SJVC": true,
+        "San Joaquin Valley College": true,
+        "SCE": true,
+        "Southern Cal. Edison": true,
+        "Sedgwick Temporary Housing": true,
+        "Siemens": true,
+        "Smith MEP": true,
+        "Stanford University": true,
+        "St. Agnes Medical Center": true,
+        "Trinity Health": true,
+        "Urology Locums": true,
+        "Walmart Store Planning": true,
+        "WestAmerica Bank": true,
+        "Westrock": true,
+        "[Smurfit] Westrock": true,
+        "Smurfit": true,
+        "EXPEDIA AFFILIATE NETWORK":true
+    };
+     const doNotRentList = {
   "Addington": {
     "Summer": true
   },
@@ -179,17 +238,13 @@
   "Harlan": {
     "Floyd": true
   },
-"Hatamaria": {
-"Ali": true
-},
   "Heffner": {
     "Christopher": true
   },
   "Hernandez": {
     "Robert": true,
     "Alejandro": true,
-    "Dora": true,
-    "Jaime": true
+    "Dora": true
   },
   "Holcomb": {
     "Larry": true
@@ -264,9 +319,6 @@
   "Luna": {
     "Andrew": true
   },
-"Masoodi": {
-"Maral": true
-},
   "Marquez": {
     "Robert": true,
     "Christina": true
@@ -322,9 +374,6 @@
   },
   "Murphy": {
     "Dejanique": true
-  },
-"Murrietta": {
-    "Assyria": true
   },
   "Noroya": {
     "Hugo": true
@@ -580,9 +629,6 @@
     "Thomas": true,
     "Saturnino": true
   },
-"Bonds": {
-    "Kelsey": true
-  },
   "Brooks": {
     "Donshay": true
   },
@@ -622,8 +668,7 @@
     "Maria": true
   },
   "Carr": {
-    "Suzzanne": true,
-    "Tabitha": true
+    "Suzzanne": true
   },
   "Casarez": {
     "Vanessa": true
@@ -680,9 +725,6 @@
   "Cuevas": {
     "Alexis": true
   },
-"Cullinan":{
-"Drew": true
-},
   "Cutler": {
     "Mervain": true
   },
@@ -838,9 +880,6 @@
   "Holguin": {
     "Marissa": true
   },
-"Hovsepian": {
-    "Michael": true
-},
   "Hysell": {
     "Marjorie": true
   },
@@ -1287,6 +1326,17 @@ GM_addStyle(`
 .highlight-do-not-rent td {
     background-color: #ffcccc !important;
 }
+
+.highlight-company-yellow,
+.highlight-company-yellow td {
+    background-color: #21d375 !important;
+    color: black !important;
+}
+
+.highlight-company-green,
+.highlight-company-green td {
+    background-color: #21d375 !important;
+}
 `);
 
 let isScanning = false;
@@ -1319,31 +1369,6 @@ function findNameCells(row) {
     }
 
     return { lastNameCell, firstNameCell };
-}
-
-function highlightReservation(row) {
-    const { lastNameCell, firstNameCell } = findNameCells(row);
-    if (lastNameCell && firstNameCell) {
-        const lastName = getFirstWord(lastNameCell.textContent.trim());
-        const firstName = getFirstWord(firstNameCell.textContent.trim());
-        console.log(`Checking: ${lastName}, ${firstName}`);
-
-        const lastNameLower = lastName.toLowerCase();
-        const firstNameLower = firstName.toLowerCase();
-
-        for (let listLastName in doNotRentList) {
-            if (getFirstWord(listLastName.toLowerCase()) === lastNameLower) {
-                for (let listFirstName in doNotRentList[listLastName]) {
-                    if (getFirstWord(listFirstName.toLowerCase()) === firstNameLower) {
-                        console.log(`Match found: ${lastName}, ${firstName}`);
-                        row.classList.add('highlight-do-not-rent');
-                        return true;
-                    }
-                }
-            }
-        }
-    }
-    return false;
 }
 
 function scanAndHighlightNames() {
@@ -1427,6 +1452,90 @@ function checkUrlAndInitialize() {
     }
 }
 
+// Helper function to normalize company names for comparison
+function normalizeCompanyName(name) {
+    // Convert to uppercase and remove all spaces and special characters
+    return name.toUpperCase().replace(/[\s\-\.]/g, '');
+}
+
+// Updated function to check company names with correct header
+function findCompanyCell(row) {
+    const cells = Array.from(row.querySelectorAll('td'));
+    let companyCell;
+
+    // Find the index of "COMPANY NAME" column
+    const headerRow = row.closest('table').querySelector('thead tr');
+    const headers = Array.from(headerRow.querySelectorAll('th'));
+
+    const companyIndex = headers.findIndex(th => th.textContent.trim().toUpperCase() === 'COMPANY NAME');
+
+    if (companyIndex !== -1) {
+        companyCell = cells[companyIndex];
+    }
+
+    return companyCell;
+}
+
+// Update this function to also check for company matches
+function highlightReservation(row) {
+    const { lastNameCell, firstNameCell } = findNameCells(row);
+    let foundMatch = false;
+
+    // Check for name matches
+    if (lastNameCell && firstNameCell) {
+        const lastName = getFirstWord(lastNameCell.textContent.trim());
+        const firstName = getFirstWord(firstNameCell.textContent.trim());
+        console.log(`Checking: ${lastName}, ${firstName}`);
+
+        const lastNameLower = lastName.toLowerCase();
+        const firstNameLower = firstName.toLowerCase();
+
+        for (let listLastName in doNotRentList) {
+            if (getFirstWord(listLastName.toLowerCase()) === lastNameLower) {
+                for (let listFirstName in doNotRentList[listLastName]) {
+                    if (getFirstWord(listFirstName.toLowerCase()) === firstNameLower) {
+                        console.log(`Match found: ${lastName}, ${firstName}`);
+                        row.classList.add('highlight-do-not-rent');
+                        foundMatch = true;
+                    }
+                }
+            }
+        }
+    }
+
+    // Check for company matches
+    const companyCell = findCompanyCell(row);
+    if (companyCell) {
+        const rawCompanyName = companyCell.textContent.trim();
+        if (rawCompanyName) {
+            const normalizedCompanyName = normalizeCompanyName(rawCompanyName);
+            console.log(`Checking company: ${rawCompanyName} (normalized: ${normalizedCompanyName})`);
+
+            // Check each company in our list for matches
+            for (let listCompany in companyList) {
+                const normalizedListCompany = normalizeCompanyName(listCompany);
+
+                // Check if normalized names match or if one contains the other
+                if (normalizedCompanyName === normalizedListCompany ||
+                    normalizedCompanyName.includes(normalizedListCompany) ||
+                    normalizedListCompany.includes(normalizedCompanyName)) {
+
+                    if (normalizeCompanyName("ALE") === normalizedListCompany) {
+                        console.log(`Green company match found: ${rawCompanyName} matches ${listCompany}`);
+                        row.classList.add('highlight-company-green');
+                    } else {
+                        console.log(`Yellow company match found: ${rawCompanyName} matches ${listCompany}`);
+                        row.classList.add('highlight-company-yellow');
+                    }
+                    foundMatch = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    return foundMatch;
+}
 // Initial check
 checkUrlAndInitialize();
 
