@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name DNR LIST
 // @namespace http://tampermonkey.net/
-// @version 3.4
+// @version 3.5
 // @description DNR
 // @match https://login.pep.hilton.com/*
 // @updateURL    https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/DNR.js
