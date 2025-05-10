@@ -73,8 +73,7 @@
         "WestAmerica Bank": true,
         "Westrock": true,
         "[Smurfit] Westrock": true,
-        "Smurfit": true,
-        "EXPEDIA AFFILIATE NETWORK":true
+        "Smurfit": true
     };
      const doNotRentList = {
   "Addington": {
