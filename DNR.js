@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name DNR LIST
 // @namespace http://tampermonkey.net/
-// @version 3.5
+// @version 3.6
 // @description DNR
 // @match https://login.pep.hilton.com/*
 // @updateURL    https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/DNR.js
@@ -53,6 +53,7 @@
         "Pacific Pro Tax": true,
         "Parwest": true,
         "Pridewaterhousecoopers": true,
+        "Pridestaff": true,
         "PWC": true,
         "Rail Pros": true,
         "Ridgerunner Engineering": true,
