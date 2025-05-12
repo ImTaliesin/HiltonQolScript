@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name DNR LIST
 // @namespace http://tampermonkey.net/
-// @version 3.6
+// @version 3.7
 // @description DNR
 // @match https://login.pep.hilton.com/*
 // @updateURL    https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/DNR.js
@@ -1439,9 +1439,10 @@ function init() {
 }
 
 function checkUrlAndInitialize() {
-    const isArrivalsPage = window.location.href.includes('/hk-frontdesk-web/index.html#/arrivals/arrivals-report-details');
+    const isArrivalsPage = window.location.href.includes('/hk-frontdesk-web/index.html#/arrivals/*');
+    const isInHousePage = window.location.href.includes('/hk-frontdesk-web/index.html#/in-house/*');
 
-    if (isArrivalsPage) {
+    if (isArrivalsPage || isInHousePage) {
         if (!hasInitialized) {
             console.log('Arrivals report page detected. Initializing script...');
             init();
