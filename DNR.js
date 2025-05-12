@@ -1439,8 +1439,8 @@ function init() {
 }
 
 function checkUrlAndInitialize() {
-    const isArrivalsPage = window.location.href.includes('/hk-frontdesk-web/index.html#/arrivals/*');
-    const isInHousePage = window.location.href.includes('/hk-frontdesk-web/index.html#/in-house/*');
+    const isArrivalsPage = window.location.href.includes('/hk-frontdesk-web/index.html#/arrivals/');
+    const isInHousePage = window.location.href.includes('/hk-frontdesk-web/index.html#/in-house/');
 
     if (isArrivalsPage || isInHousePage) {
         if (!hasInitialized) {
