@@ -15,7 +15,7 @@
     'use strict';
 
     const companyList = {
-        "ALE": "green", // Special case company that highlights in green
+        //"ALE": "green", //Special case company that highlights in green
         "Adventist": true, //true highlights in yellow
         "Aventist Heath": true,
         "Ale Solutions": true,
