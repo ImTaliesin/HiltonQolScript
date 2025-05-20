@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hilton Element Color Changer and Column Hider
 // @namespace    http://tampermonkey.net/
-// @version      2.9
+// @version      3.1
 // @description  Changes the color of table headers, buttons, and elements on enterprise.pep.hilton.com and allows users to select columns to hide
 // @match        https://login.pep.hilton.com/*
 // @updateURL    https://raw.githubusercontent.com/ImTaliesin/HiltonQolScript/main/main.js
@@ -13,7 +13,7 @@
 
 (function() {
     'use strict';
-    console.log("Brennan's script last updated: 7/22/24")
+    console.log("Brennan's script last updated: 5/13/25")
     // Default color values (HEX CODES)
     const DEFAULT_COLORS = {
         primaryColor: '#6E00FF',
@@ -27,8 +27,9 @@
         'HONORS TIER', 'BENEFITS', 'DIGITAL CHECK OUT', 'DCI', 'DK', 'MESSAGE',
         'LAST NAME', 'FIRST NAME', 'STATUS', 'ROOM', 'ROOM TYPE', 'OCC STATUS',
         'HSK STATUS', 'ARRIVAL DATE', 'DEPARTURE DATE',
-        'NIGHTS', 'RATE PLAN','GROUP', 'CITY', 'COMPANY NAME', 'CONF NUMBER', 'EST. ARR TIME',
-        'EST. DEPT TIME', 'LATE CHECK OUT', 'BALANCE', 'ADD ON', 'MARKET SEGMENT','LOCAL MARKET SEGMENT','ADDN GUESTS', 'EARLY CHECK IN',
+        'NIGHTS', 'RATE PLAN','GROUP', 'CITY', 'COMPANY NAME', 'CONFIRMATION NUMBER', 'EST. ARR TIME',
+        'EST. DEPT TIME', 'LATE CHECK OUT', 'BALANCE', 'ADD ON', 'MARKET SEGMENT','LOCAL MARKET SEGMENT',
+        'GROUP LISTING', 'ADDN GUESTS', 'EARLY CHECK IN',
         'DEPOSIT STATUS','LOCAL FIRST NAME', 'LOCAL LAST NAME'
     ];
 
